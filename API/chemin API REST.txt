@@ -1,0 +1,28 @@
+Verbe HTTP		Endpoint	 					Action
+
+GET				/applications	  				Liste les applications
+GET				/applications/findByStatus		Liste les applications par statuts
+POST			/applications					Ajout d'une application
+POST			/applications/createWithArray	Ajout de plusieurs applications
+
+GET				/applications/X  				Détails Application X
+PUT				/applications/X  				MàJ détails Application X
+DELETE	 		/applications/X  				Supprime Application X 
+
+GET				/applications/X/start			Démarre l'application X
+GET				/applications/X/stop			Stop l'application X
+GET				/applications/X/update			MàJ l'application X
+GET				/applications/X/auto			Automatisation de l'application X
+
+
+GET				/user	  				Liste les applications
+GET				/user/findByRole		Liste les applications par role
+POST			/user					Ajout d'une application
+POST			/user/createWithArray	Ajout de plusieurs applications
+
+GET				/user/{username}		Get user by user name
+POST			/user/{username}		MàJ User
+DELETE			/user/{username}		Suppression de l'utilisateur
+
+GET				/user/login				Connexion sur le système
+GET				/user/logout			Déconnexion sur le système
