@@ -23,6 +23,9 @@
               "src/assets"
             ],
             "styles": [
+              {
+                "input": "src/tib-theme.scss"
+              },
               "src/styles.css"
             ],
             "scripts": []
