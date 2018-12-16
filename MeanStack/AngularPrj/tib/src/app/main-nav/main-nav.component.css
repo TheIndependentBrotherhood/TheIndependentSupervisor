@@ -12,14 +12,16 @@
 }
 
 .spacer {
-  flex: 1 1 auto;
+  position: absolute;
+  right: 1rem;
 }
 
-mat-toolbar a {
-  display: inline-block;
-  margin: 0 10px;
+.header {
   color: white;
-  text-decoration: none;
+}
+
+.mat-nav-list > hr {
+  color: lightgrey;
 }
 
 .mat-drawer-side {
