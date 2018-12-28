@@ -1,0 +1,7 @@
+{ 
+    "_id" : ObjectId("5c1d1ae035c433a248093a47"), 
+    "title" : "Hey! It's me !", 
+    "content" : "Mario !", 
+    "date" : ISODate("2018-12-21T16:54:56.767+0000"), 
+    "__v" : NumberInt(0)
+}

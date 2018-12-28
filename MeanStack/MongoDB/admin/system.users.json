@@ -1,0 +1,25 @@
+{ 
+    "_id" : "TIBDB.brotherhood", 
+    "user" : "brotherhood", 
+    "db" : "TIBDB", 
+    "credentials" : {
+        "SCRAM-SHA-1" : {
+            "iterationCount" : NumberInt(10000), 
+            "salt" : "zX8z8nVUgncnVsuQTg5QCg==", 
+            "storedKey" : "nI275Zv8Wq4pIq0N2PXP6RiHIeY=", 
+            "serverKey" : "9ZjfC1sRPjA+G3vr4Km0rGX+xAQ="
+        }, 
+        "SCRAM-SHA-256" : {
+            "iterationCount" : NumberInt(15000), 
+            "salt" : "araF59vCRL7WBokfze62lnkmbzQ2JESLuoVRUQ==", 
+            "storedKey" : "+RWelP/gsrnHFXEootqGQyRK1cGNH/VReqtTJXzLvsM=", 
+            "serverKey" : "tnj5YzC/sQ4D+cGHURI+gs4htsWhfxjZVrawehS7PXc="
+        }
+    }, 
+    "customData" : {
+
+    }, 
+    "roles" : [
+
+    ]
+}
