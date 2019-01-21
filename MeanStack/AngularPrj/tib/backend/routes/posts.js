@@ -6,7 +6,7 @@ const Post = require('../models/post');
 const router = express.Router();
 const MIME_TYPE_MAP = {
    'images/png': 'png'
-   , 'images/jpeg': 'jpeg'
+   , 'images/jpeg': 'jpg'
    , 'images/jpg': 'jpg'
 }
 
