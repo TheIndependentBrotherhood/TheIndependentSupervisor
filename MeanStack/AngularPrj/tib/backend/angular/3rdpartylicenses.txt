@@ -378,13 +378,13 @@ MIT
 
 @angular/material/expansion
 
+@angular/material/list
+
 @angular/material/icon
 
 @angular/material/sidenav
 
 @angular/material/toolbar
-
-@angular/material/list
 
 zone.js
 MIT
