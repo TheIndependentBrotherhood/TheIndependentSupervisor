@@ -378,6 +378,8 @@ MIT
 
 @angular/material/expansion
 
+@angular/material/dialog
+
 @angular/material/list
 
 @angular/material/icon
