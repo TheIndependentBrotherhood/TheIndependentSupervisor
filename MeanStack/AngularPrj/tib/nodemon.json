@@ -1,0 +1,9 @@
+{
+  "env": {
+    "MONGO_HOST": "localhost"
+    , "MONGO_DB": "TIBDB"
+    , "MONGO_USERNAME": "brotherhood"
+    , "MONGO_PW": "brotherhood"
+    , "JWT_KEY": "le_secret_devrait_être_plus_long"
+  }
+}
