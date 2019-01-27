@@ -8,7 +8,7 @@ const userRoutes = require('./routes/user');
 
 const app = express();
 
-mongoose.connect('mongodb://brotherhood:brotherhood@localhost/TIBDB', { useCreateIndex: true, useNewUrlParser: true })
+mongoose.connect('mongodb://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PW + '@' + process.env.MONGO_HOST + '/' + process.env.MONGO_DB, { useCreateIndex: true, useNewUrlParser: true })
   .then(() => {
     console.log('Connected to database!');
   })
