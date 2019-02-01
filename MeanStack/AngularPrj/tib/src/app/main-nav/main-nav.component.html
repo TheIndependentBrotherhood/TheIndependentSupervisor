@@ -5,11 +5,14 @@
       [opened]="!(isHandset$ | async)">
     <mat-toolbar class="header" color="primary">Menu</mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item [routerLink]="['/']">Items</a>
+      <a mat-list-item [routerLink]="['/']">Home</a>
+      <a mat-list-item [routerLink]="['/apps']">Applications</a>
       <a mat-list-item [routerLink]="['/posts']">Posts</a>
-      <a mat-list-item [routerLink]="['/create']" *ngIf="userIsAuthenticated">New Post</a>
-      <hr>
-      <a mat-list-item href="#">Other</a>
+      <hr *ngIf="userIsAuthenticated">
+      <a mat-list-item [routerLink]="['/posts/create']" *ngIf="userIsAuthenticated">New Post</a>
+      <a mat-list-item [routerLink]="['/apps/create']" *ngIf="userIsAuthenticated">New Application</a>
+      <a mat-list-item [routerLink]="['/server']" *ngIf="userIsAuthenticated">Data Server</a>
+      <a mat-list-item [routerLink]="['/users']" *ngIf="userIsAuthenticated">Users</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -22,7 +25,8 @@
         *ngIf="isHandset$ | async">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span class="header">TIB</span>
+      <span class="header" *ngIf="isHandset$ | async">TIS</span>
+      <span class="header" *ngIf="!(isHandset$ | async)">The Independent Supervisor</span>
       <span class="spacer"></span>
       <ul>
         <li *ngIf="!userIsAuthenticated">
@@ -33,9 +37,6 @@
         </li>
         <li *ngIf="userIsAuthenticated">
           <button mat-button (click)="onLogout()">Logout</button>
-        </li>
-        <li *ngIf="userIsAuthenticated">
-          <a mat-button routerLink="/basket" routerLinkActive="mat-accent">Basket <mat-icon>shopping_cart</mat-icon></a>
         </li>
       </ul>
     </mat-toolbar>

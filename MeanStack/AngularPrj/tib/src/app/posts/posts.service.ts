@@ -84,7 +84,7 @@ export class PostsService {
         id: id
         , title: title
         , content: content
-        , imagePath: image
+        , imagePath: image ? image : null
         , creator: null
       };
     }
