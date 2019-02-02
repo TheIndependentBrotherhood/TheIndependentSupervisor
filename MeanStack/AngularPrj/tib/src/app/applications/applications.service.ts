@@ -99,4 +99,34 @@ export class ApplicationsService {
   deleteApplication(applicationId: string) {
     return this.http.delete(BACKEND_URL + applicationId);
   }
+
+  startApplication(applicationId: string) {
+    // return this.http.delete(BACKEND_URL + applicationId);
+    const app = this.http.get<{
+      _id: string
+      , title: string
+      , content: string
+      , imagePath: string
+      , creator: string }
+    >(BACKEND_URL + applicationId);
+
+    console.log(app);
+
+    return app;
+  }
+
+  stopApplication(applicationId: string) {
+    // return this.http.delete(BACKEND_URL + applicationId);
+    const app = this.http.get<{
+      _id: string
+      , title: string
+      , content: string
+      , imagePath: string
+      , creator: string }
+    >(BACKEND_URL + applicationId);
+
+    console.log(app);
+
+    return app;
+  }
 }

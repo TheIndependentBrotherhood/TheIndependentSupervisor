@@ -18,13 +18,14 @@ const routes: Routes = [
 
   , { path: 'apps', component: ApplicationListComponent }
   , { path: 'apps/create', component: ApplicationCreateComponent, canActivate: [AuthGuard] }
-  , { path: 'apps/edit/:postId', component: ApplicationCreateComponent, canActivate: [AuthGuard] }
+  , { path: 'apps/edit/:applicationId', component: ApplicationCreateComponent, canActivate: [AuthGuard] }
 
   , { path: 'posts', component: PostListComponent }
   , { path: 'posts/create', component: PostCreateComponent, canActivate: [AuthGuard] }
   , { path: 'posts/edit/:postId', component: PostCreateComponent, canActivate: [AuthGuard] }
 
   , { path: 'auth', loadChildren: './auth/auth.module#AuthModule'}
+  , { path: '**', redirectTo: '' }
 ];
 
 @NgModule({
