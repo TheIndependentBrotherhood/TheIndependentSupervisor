@@ -98,6 +98,9 @@ exports.getPost = (req, res, next) => {
 }
 
 exports.deletePost = (req, res, next) => {
+  // WIP
+  // Manque la suppression de l'image du post
+
   Post.deleteOne({ _id: req.params.id, creator: req.userData.userId })
     .then(result => {
       if (result.n > 0) {

@@ -13,4 +13,7 @@ router.get('', ApplicationController.getApplications);
 router.get('/:id', ApplicationController.getApplication);
 router.delete('/:id', checkAuth, ApplicationController.deleteApplication);
 
+router.put('/:id/run', checkAuth, ApplicationController.startApplication);
+router.put('/:id/stop', checkAuth, ApplicationController.stopApplication);
+
 module.exports = router;

@@ -57,6 +57,7 @@ export class ApplicationCreateComponent implements OnInit, OnDestroy {
             , content: applicationData.content
             , imagePath: applicationData.imagePath
             , creator: applicationData.creator
+            , isRunning: applicationData.isRunning
           };
           this.form.setValue({
             title: this.application.title

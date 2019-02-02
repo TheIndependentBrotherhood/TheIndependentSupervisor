@@ -30,7 +30,8 @@ export class ApplicationsService {
                 title: application.title,
                 content: application.content,
                 imagePath: application.imagePath,
-                creator: application.creator
+                creator: application.creator,
+                isRunning: application.isRunning
               };
             })
             , maxApplications: applicationData.maxApplications
@@ -56,7 +57,8 @@ export class ApplicationsService {
       , title: string
       , content: string
       , imagePath: string
-      , creator: string }
+      , creator: string
+      , isRunning: boolean }
     >(BACKEND_URL + id);
   }
 
@@ -64,9 +66,7 @@ export class ApplicationsService {
     const applicationData = new FormData();
     applicationData.append('title', title);
     applicationData.append('content', content);
-    if (image) {
-      applicationData.append('image', image, title);
-    }
+    applicationData.append('image', image, title);
     this.http.post<{ message: string, application: Application }>(BACKEND_URL, applicationData)
       .subscribe((responseData) => {
         this.router.navigate(['/apps']);
@@ -86,8 +86,9 @@ export class ApplicationsService {
         id: id
         , title: title
         , content: content
-        , imagePath: image ? image : null
+        , imagePath: image
         , creator: null
+        , isRunning: null
       };
     }
     this.http.put(BACKEND_URL + id, applicationData)
@@ -101,32 +102,10 @@ export class ApplicationsService {
   }
 
   startApplication(applicationId: string) {
-    // return this.http.delete(BACKEND_URL + applicationId);
-    const app = this.http.get<{
-      _id: string
-      , title: string
-      , content: string
-      , imagePath: string
-      , creator: string }
-    >(BACKEND_URL + applicationId);
-
-    console.log(app);
-
-    return app;
+    return this.http.put(BACKEND_URL + applicationId + '/run', null);
   }
 
   stopApplication(applicationId: string) {
-    // return this.http.delete(BACKEND_URL + applicationId);
-    const app = this.http.get<{
-      _id: string
-      , title: string
-      , content: string
-      , imagePath: string
-      , creator: string }
-    >(BACKEND_URL + applicationId);
-
-    console.log(app);
-
-    return app;
+    return this.http.put(BACKEND_URL + applicationId + '/stop', null);
   }
 }

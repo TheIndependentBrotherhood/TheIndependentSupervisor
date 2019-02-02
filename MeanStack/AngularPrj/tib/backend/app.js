@@ -19,6 +19,7 @@ mongoose.connect('mongodb://' + process.env.MONGO_USERNAME + ':' + process.env.M
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : false}));
+app.use("/scripts", express.static(path.join(__dirname, 'scripts')));
 app.use("/images", express.static(path.join(__dirname, 'images')));
 app.use("/", express.static(path.join(__dirname, 'angular')));
 

@@ -4,4 +4,5 @@ export interface Application {
   content: string;
   imagePath: string;
   creator: string;
+  isRunning: boolean;
 }
