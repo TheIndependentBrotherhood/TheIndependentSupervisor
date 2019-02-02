@@ -185,37 +185,65 @@ exports.getApplication = (req, res, next) => {
 exports.deleteApplication = (req, res, next) => {
   let isRunning = false;
 
-  Application.deleteOne({ _id: req.params.id, creator: req.userData.userId })
-    .then(result => {
-      if (result.n > 0) {
-        for (var key in runningApps) {
-          if (runningApps.hasOwnProperty(key) && key === req.params.id) {
-            isRunning = true;
-          }
-        }
+  Application.findById(req.params.id)
+    .then(application => {
+      if (application) {
+        Application.deleteOne({ _id: req.params.id, creator: req.userData.userId })
+          .then(result => {
+            if (result.n > 0) {
+              for (var key in runningApps) {
+                if (runningApps.hasOwnProperty(key) && key === req.params.id) {
+                  isRunning = true;
+                }
+              }
 
-        // WIP
-        // Manque la suppression du dossier comprenant les scripts
-        // Manque la suppression de l'image de l'application
-        if (isRunning) {
-          kill(runningApps[req.params.id]);
-          delete runningApps[req.params.id];
-        }
+              // WIP
+              // Manque la suppression de l'image de l'application
+              /* fs.unlink('./backend/images/' + application.imagePath, (err) => {
+                if (err) console.log('Delete image: ' + err);
+              }); */
 
-        res.status(200).json({ message: 'Deletion succesful!' });
+              fs.unlink('./backend/scripts/' + application.title + '/start.sh', (err) => {
+                if (err) console.log('Delete start script: ' + err);
+              });
+              fs.unlink('./backend/scripts/' + application.title + '/stop.sh', (err) => {
+                if (err) console.log('Delete stop script: ' + err);
+              });
+              fs.unlink('./backend/scripts/' + application.title + '/update.sh', (err) => {
+                if (err) console.log('Delete update script: ' + err);
+              });
+
+              fs.rmdir('./backend/scripts/' + application.title, (err) => {
+                if (err) console.log('Delete scripts folder: ' + err);
+              });
+
+              if (isRunning) {
+                kill(runningApps[req.params.id]);
+                delete runningApps[req.params.id];
+              }
+
+              res.status(200).json({ message: 'Deletion succesful!' });
+            } else {
+              res.status(401).json({ message: 'Not authorized!' });
+            }
+          })
+          .catch(error => {
+            res.status(500).json({
+              message: 'Fetching applications failed!'
+            });
+        });
       } else {
-        res.status(401).json({ message: 'Not authorized!' });
+        res.status(404).json({message: 'Application not found!'});
       }
     })
     .catch(error => {
       res.status(500).json({
-        message: 'Fetching applications failed!'
+        message: 'Fetching application failed!'
       });
     });
 }
 
 exports.startApplication = (req, res, next) => {
-  console.log('coucou: ' + req.params.id);
   Application.findById(req.params.id)
     .then(oldApp => {
       if (oldApp && !oldApp.isRunning) {
