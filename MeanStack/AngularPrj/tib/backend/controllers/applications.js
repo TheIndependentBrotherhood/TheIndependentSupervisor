@@ -9,6 +9,9 @@
 const Application = require('../models/application');
 const spawn = require('child_process').spawn;
 const psTree = require('ps-tree');
+const fs = require('fs');
+
+var path = require("path");
 
 const kill = function (pid, signal, callback) {
     signal   = signal || 'SIGKILL';
@@ -46,22 +49,22 @@ exports.createApplication = (req, res, next) => {
   });
   application.save().then(createdApplication => {
     // Creates /scripts/application.title, regardless of whether `/scripts` exist.
-    fs.mkdir('/scripts/' + application.title, { recursive: true }, (err) => {
-      if (err) throw err;
+    fs.mkdir('./backend/scripts/' + application.title, { recursive: true }, (err) => {
+      if (err) console.log('Create dir: ' + err);
     });
 
     const data = "#!/bin/bash \n echo \"Nothing in this script\"";
 
-    fs.writeFile('/scripts/' + application.title + '/start.sh', data, (err) => {
-      if (err) throw err;
+    fs.writeFile('./backend/scripts/' + application.title + '/start.sh', data, { mode: 0o765 }, (err) => {
+      if (err) console.log('Create start script: ' + err);
     });
 
-    fs.writeFile('/scripts/' + application.title + '/stop.sh', data, (err) => {
-      if (err) throw err;
+    fs.writeFile('./backend/scripts/' + application.title + '/stop.sh', data, { mode: 0o765 }, (err) => {
+      if (err) console.log('Create stop script: ' + err);
     });
 
-    fs.writeFile('/scripts/' + application.title + '/update.sh', data, (err) => {
-      if (err) throw err;
+    fs.writeFile('./backend/scripts/' + application.title + '/update.sh', data, { mode: 0o765 }, (err) => {
+      if (err) console.log('Create update script: ' + err);
     });
 
     res.status(201).json({
@@ -73,6 +76,7 @@ exports.createApplication = (req, res, next) => {
     });
   })
   .catch(error => {
+    console.log(error);
     res.status(500).json({
       message: 'Creating an application failed!'
     });
@@ -86,6 +90,9 @@ exports.updateApplication = (req, res, next) => {
     const url = req.protocol + '://' + req.get('host');
     imagePath = url + "/images/" + req.file.filename;
   }
+
+  // WIP
+  // Renomme l'image de l'application
 
   Application.findById(req.params.id)
     .then(oldApp => {
@@ -101,8 +108,8 @@ exports.updateApplication = (req, res, next) => {
         Application.updateOne({ _id: req.params.id, creator: req.userData.userId }, application)
           .then(result => {
             if (result.n > 0) {
-              fs.rename('/scripts/' + oldApp.title, '/scripts/' + req.body.title, (err) => {
-                if (err) throw err;
+              fs.rename('./backend/scripts/' + oldApp.title, './backend/scripts/' + req.body.title, (err) => {
+                if (err) console.log('Rename dir: ' + err);
               });
               res.status(200).json({ message: 'Update succesful!' });
             } else {
@@ -222,7 +229,7 @@ exports.startApplication = (req, res, next) => {
             if (result.n > 0) {
               // Start script and add in object
               // const child = spawn('ls', ['-lh', '/usr']);
-              const child = spawn(`./scripts/${newApp.title}/start.sh`);
+              const child = spawn(`./backend/scripts/${oldApp.title}/start.sh`);
               console.log('child: ' + child.pid);
 
               runningApps[req.params.id] = child.pid;
@@ -242,21 +249,21 @@ exports.startApplication = (req, res, next) => {
               child.on('close', function (code){
                 console.log(`child process exited with code ${code}`);
                 const closedApp = new Application({
-                  ...newApp
+                  ...oldApp
                   , _id: req.params.id
                   , isRunning: false
                 });
                 Application.updateOne({ _id: req.params.id, creator: req.userData.userId }, closedApp)
                   .then(result => {
                     if (result.n > 0) {
-                      delete runningApps[closedApp.id];
-                      console.log('App ( ' + closedApp.title + ' ): Update succesful!' );
+                      delete runningApps[oldApp.id];
+                      console.log('App ( ' + oldApp.title + ' ): Update succesful!' );
                     } else {
-                      console.log('App ( ' + closedApp.title + ' ): Not authorized!');
+                      console.log('App ( ' + oldApp.title + ' ): Not authorized!');
                     }
                   })
                   .catch(error => {
-                    console.log('App ( ' + closedApp.title + ' ): ' + error);
+                    console.log('App ( ' + oldApp.title + ' ): ' + error);
                 });
               });
 

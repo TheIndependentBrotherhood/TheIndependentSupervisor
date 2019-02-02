@@ -25,6 +25,8 @@ exports.createPost = (req, res, next) => {
 }
 
 exports.updatePost = (req, res, next) => {
+  // WIP
+  // Renomme l'image de l'application
   let imagePath = req.body.imagePath;
   if (req.file) {
     const url = req.protocol + '://' + req.get('host');
