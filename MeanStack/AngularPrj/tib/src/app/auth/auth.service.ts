@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { AuthData } from './auth-data.model';
 
 import { environment } from '../../environments/environment';
 
-const BACKEND_URL = environment.apiUrl + '/user/';
+const BACKEND_URL = environment.apiUrl + '/users/';
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
@@ -16,6 +17,9 @@ export class AuthService {
   private tokenTimer: any;
   private userId: string;
   private authStatusListener = new Subject<boolean>();
+
+  private users: AuthData[] = [];
+  private usersUpdated = new Subject<{users: AuthData[], userCount: number}>();
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -35,8 +39,44 @@ export class AuthService {
     return this.authStatusListener.asObservable();
   }
 
-  createUser(email: string, password: string) {
-    const authData: AuthData = { email: email, password: password };
+  getUser(id: string) {
+    return this.http.get<{
+      _id: string
+      , email: string
+      , username: string
+      , isAdmin: boolean }
+    >(BACKEND_URL + id);
+  }
+
+  getUsers(userPerPage: number, currentPage: number) {
+    const queryParams = `?pagesize=${userPerPage}&page=${currentPage}`;
+    this.http
+      .get<{message: string, users: any, maxUsers: number}>(BACKEND_URL + queryParams)
+      .pipe(
+        map((userData) => {
+          return { users: userData.users.map(user => {
+              return {
+                id: user._id,
+                email: user.email,
+                username: user.username,
+                password: user.password
+              };
+            })
+            , maxUsers: userData.maxUsers
+          };
+        })
+      )
+      .subscribe((transformeduserData) => {
+          this.users = transformeduserData.users;
+          this.usersUpdated.next({
+            users: [...this.users]
+            , userCount: transformeduserData.maxUsers
+          });
+      });
+  }
+
+  createUser(email: string, username: string, password: string) {
+    const authData: AuthData = { email: email, password: password, username: username, isAdmin: false};
     this.http
       .post(BACKEND_URL + 'signup', authData)
       .subscribe(() => {
@@ -47,7 +87,7 @@ export class AuthService {
   }
 
   login(email: string, password: string) {
-    const authData: AuthData = { email: email, password: password };
+    const authData: AuthData = { email: email, password: password, username: null, isAdmin: false };
     this.http.post<{ token: string, expiresIn: number, userId: string }>(BACKEND_URL + 'login', authData)
       .subscribe(response => {
         const token = response.token;

@@ -9,7 +9,7 @@ import { PostCreateComponent } from './posts/post-create/post-create.component';
 import { ApplicationListComponent } from './applications/application-list/application-list.component';
 import { ApplicationCreateComponent } from './applications/application-create/application-create.component';
 
-import { AuthGuard } from './auth/auth.guard';
+import { AuthGuard, AuthAdminGuard } from './auth/auth.guard';
 
 const routes: Routes = [
   { path: '', component: DataTableComponent }
@@ -17,8 +17,8 @@ const routes: Routes = [
   , { path: 'server', component: DataTableComponent }
 
   , { path: 'apps', component: ApplicationListComponent }
-  , { path: 'apps/create', component: ApplicationCreateComponent, canActivate: [AuthGuard] }
-  , { path: 'apps/edit/:applicationId', component: ApplicationCreateComponent, canActivate: [AuthGuard] }
+  , { path: 'apps/create', component: ApplicationCreateComponent, canActivate: [AuthAdminGuard] }
+  , { path: 'apps/edit/:applicationId', component: ApplicationCreateComponent, canActivate: [AuthAdminGuard] }
 
   , { path: 'posts', component: PostListComponent }
   , { path: 'posts/create', component: PostCreateComponent, canActivate: [AuthGuard] }
