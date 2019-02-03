@@ -105,6 +105,10 @@ export class ApplicationsService {
     return this.http.put(BACKEND_URL + applicationId + '/run', null);
   }
 
+  updateSoftwareApplication(applicationId: string) {
+    return this.http.put(BACKEND_URL + applicationId + '/update', null);
+  }
+
   stopApplication(applicationId: string) {
     return this.http.put(BACKEND_URL + applicationId + '/stop', null);
   }

@@ -38,20 +38,24 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
         this.applications = applicationData.applications;
       });
     this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authService.getUser(this.authService.getUserId())
+    if (this.userIsAuthenticated) {
+      this.authService.getUser(this.authService.getUserId())
       .subscribe(user => {
         this.isAdmin = user.isAdmin;
         this.username = user.username;
       });
+    }
     this.authStatusSub = this.authService
       .getAuthStatusListener()
       .subscribe(isAuthenticated => {
         this.userIsAuthenticated = isAuthenticated;
-        this.authService.getUser(this.authService.getUserId())
-        .subscribe(user => {
-          this.isAdmin = user.isAdmin;
-          this.username = user.username;
-        });
+        if (this.userIsAuthenticated) {
+          this.authService.getUser(this.authService.getUserId())
+          .subscribe(user => {
+            this.isAdmin = user.isAdmin;
+            this.username = user.username;
+          });
+        }
         this.userId = this.authService.getUserId();
       });
   }
@@ -81,6 +85,18 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.applicationsService.getApplications(this.applicationsPerPage, this.currentPage);
       }, () => {
+        this.isLoading = false;
+      });
+  }
+
+  onUpdateSoftware(applicationId: string) {
+    this.isLoading = true;
+    this.applicationsService
+      .updateSoftwareApplication(applicationId)
+      .subscribe(() => {
+        this.applicationsService.getApplications(this.applicationsPerPage, this.currentPage);
+      }, () => {
+        console.log("Bonjour!");
         this.isLoading = false;
       });
   }

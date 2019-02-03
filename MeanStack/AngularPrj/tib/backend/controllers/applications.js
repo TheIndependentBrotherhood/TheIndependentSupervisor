@@ -257,6 +257,10 @@ exports.startApplication = (req, res, next) => {
             if (result.n > 0) {
               // Start script and add in object
               // const child = spawn('ls', ['-lh', '/usr']);
+
+              // WIP
+              // Mise à jour automatique
+
               const child = spawn(`./backend/scripts/${oldApp.title}/start.sh`);
               console.log('child: ' + child.pid);
 
@@ -276,6 +280,11 @@ exports.startApplication = (req, res, next) => {
 
               child.on('close', function (code){
                 console.log(`child process exited with code ${code}`);
+
+                // WIP
+                // Manque l'Autorestart
+                // Manque la mise à jour s'il y a autorestart
+
                 const closedApp = new Application({
                   ...oldApp
                   , _id: req.params.id
@@ -285,7 +294,7 @@ exports.startApplication = (req, res, next) => {
                   .then(result => {
                     if (result.n > 0) {
                       delete runningApps[oldApp.id];
-                      console.log('App ( ' + oldApp.title + ' ): Update succesful!' );
+                      console.log('App ( ' + oldApp.title + ' ): Exit succesful!' );
                     } else {
                       console.log('App ( ' + oldApp.title + ' ): Not authorized!');
                     }
@@ -295,7 +304,7 @@ exports.startApplication = (req, res, next) => {
                 });
               });
 
-              res.status(200).json({ message: 'Update succesful!' });
+              res.status(200).json({ message: 'Start succesful!' });
             } else {
               res.status(401).json({ message: 'Not authorized!' });
             }
@@ -311,6 +320,41 @@ exports.startApplication = (req, res, next) => {
       } else {
         res.status(500).json({
           message: 'Already running!'
+        })
+      }
+    })
+    .catch(error => {
+      console.log('hey: ' + error);
+      res.status(500).json({
+        message: 'Fetching application failed!'
+      });
+  });
+}
+
+exports.updateSoftwareApplication = (req, res, next) => {
+  Application.findById(req.params.id)
+    .then(app => {
+      if (app && !app.isRunning) {
+        const child = spawn(`./backend/scripts/${app.title}/update.sh`);
+        console.log('child: ' + child.pid);
+
+        child.stdout.on('data', function(data){
+          console.log(`child stdout:\n${data}`);
+        });
+
+        child.stderr.on('data', function(data){
+          console.log(`child stderr:\n${data}`);
+        });
+
+        child.on('close', function (code){
+          console.log(`child process exited with code ${code}`);
+        });
+        res.status(200).json({ message: 'Update succesful!' });
+      } else if (!app) {
+        res.status(404).json({message: 'Application not found!'});
+      } else {
+        res.status(500).json({
+          message: 'This app is currently running!'
         })
       }
     })
@@ -338,7 +382,7 @@ exports.stopApplication = (req, res, next) => {
           .then(result => {
             if (result.n > 0) {
               delete runningApps[closedApp.id];
-              res.status(200).json({ message: 'Update succesful!' });
+              res.status(200).json({ message: 'Stop succesful!' });
             } else {
               res.status(401).json({ message: 'Not authorized!' });
             }

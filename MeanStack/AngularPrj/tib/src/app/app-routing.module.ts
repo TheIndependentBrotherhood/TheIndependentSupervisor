@@ -9,7 +9,8 @@ import { PostCreateComponent } from './posts/post-create/post-create.component';
 import { ApplicationListComponent } from './applications/application-list/application-list.component';
 import { ApplicationCreateComponent } from './applications/application-create/application-create.component';
 
-import { AuthGuard, AuthAdminGuard } from './auth/auth.guard';
+import { AuthGuard } from './auth/auth.guard';
+import { AuthAdminGuard } from './auth/auth-admin.guard';
 
 const routes: Routes = [
   { path: '', component: DataTableComponent }
@@ -31,7 +32,7 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
-  providers: [AuthGuard]
+  providers: [AuthGuard, AuthAdminGuard]
 })
 export class AppRoutingModule {
 

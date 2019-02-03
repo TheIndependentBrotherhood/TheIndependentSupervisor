@@ -13,6 +13,7 @@ const BACKEND_URL = environment.apiUrl + '/users/';
 @Injectable({providedIn: 'root'})
 export class AuthService {
   private isAuthenticated = false;
+  private isAdmin = false;
   private token: string;
   private tokenTimer: any;
   private userId: string;
@@ -29,6 +30,10 @@ export class AuthService {
 
   getIsAuth() {
     return this.isAuthenticated;
+  }
+
+  getIsAdmin() {
+    return this.isAdmin;
   }
 
   getUserId() {
@@ -88,7 +93,7 @@ export class AuthService {
 
   login(email: string, password: string) {
     const authData: AuthData = { email: email, password: password, username: null, isAdmin: false };
-    this.http.post<{ token: string, expiresIn: number, userId: string }>(BACKEND_URL + 'login', authData)
+    this.http.post<{ token: string, expiresIn: number, userId: string, isAdmin: boolean }>(BACKEND_URL + 'login', authData)
       .subscribe(response => {
         const token = response.token;
         this.token = token;
@@ -96,6 +101,7 @@ export class AuthService {
           const expiresInDuration = response.expiresIn;
           this.setAuthTime(expiresInDuration);
           this.isAuthenticated = true;
+          this.isAdmin = response.isAdmin;
           this.userId = response.userId;
           this.authStatusListener.next(true);
           const now = new Date();

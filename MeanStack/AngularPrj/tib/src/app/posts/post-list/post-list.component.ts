@@ -38,20 +38,24 @@ export class PostListComponent implements OnInit, OnDestroy {
         this.posts = postData.posts;
       });
     this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authService.getUser(this.authService.getUserId())
+    if (this.userIsAuthenticated) {
+      this.authService.getUser(this.authService.getUserId())
       .subscribe(user => {
         this.isAdmin = user.isAdmin;
         this.username = user.username;
       });
+    }
     this.authStatusSub = this.authService
       .getAuthStatusListener()
       .subscribe(isAuthenticated => {
         this.userIsAuthenticated = isAuthenticated;
-        this.authService.getUser(this.authService.getUserId())
+        if (this.userIsAuthenticated) {
+          this.authService.getUser(this.authService.getUserId())
           .subscribe(user => {
             this.isAdmin = user.isAdmin;
             this.username = user.username;
           });
+        }
         this.userId = this.authService.getUserId();
       });
   }

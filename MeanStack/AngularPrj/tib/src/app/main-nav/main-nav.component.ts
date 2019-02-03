@@ -23,45 +23,41 @@ export class MainNavComponent implements OnInit, OnDestroy {
   constructor(private breakpointObserver: BreakpointObserver, private authService: AuthService) {}
 
   ngOnInit() {
-    console.log('Init start: ' + this.isAdmin + ' | ' + this.username);
     this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authService.getUser(this.authService.getUserId())
+    if (this.userIsAuthenticated) {
+      this.authService.getUser(this.authService.getUserId())
       .subscribe(user => {
         this.isAdmin = user.isAdmin;
         this.username = user.username;
       });
-
+    }
+    
     this.authListenerSubs = this.authService
       .getAuthStatusListener()
       .subscribe(isAuthenticated => {
-        console.log('SubListener start: ' + this.isAdmin + ' | ' + this.username);
-        this.authService.getUser(this.authService.getUserId())
+        if (isAuthenticated) {
+          this.authService.getUser(this.authService.getUserId())
           .subscribe(user => {
             this.isAdmin = user.isAdmin;
             this.username = user.username;
           });
-        console.log('SubListener end: ' + this.isAdmin + ' | ' + this.username);
+        }
         this.userIsAuthenticated = isAuthenticated;
     });
-    console.log('Init end: ' + this.isAdmin + ' | ' + this.username);
   }
 
   onLogout() {
-    console.log('onLogout start: ' + this.isAdmin + ' | ' + this.username);
     this.isAdmin = false;
     this.username = null;
     this.userIsAuthenticated = null;
     this.authService.logout();
-    console.log('onLogout end: ' + this.isAdmin + ' | ' + this.username);
   }
 
   ngOnDestroy() {
-    console.log('ngOnDestroy start: ' + this.isAdmin + ' | ' + this.username);
     this.isAdmin = false;
     this.username = null;
     this.userIsAuthenticated = null;
     this.authListenerSubs.unsubscribe();
-    console.log('ngOnDestroy end: ' + this.isAdmin + ' | ' + this.username);
   }
 
 }

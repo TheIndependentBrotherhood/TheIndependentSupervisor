@@ -15,5 +15,6 @@ router.delete('/:id', checkAuth, ApplicationController.deleteApplication);
 
 router.put('/:id/run', checkAuth, ApplicationController.startApplication);
 router.put('/:id/stop', checkAuth, ApplicationController.stopApplication);
+router.put('/:id/update', checkAuth, ApplicationController.updateSoftwareApplication);
 
 module.exports = router;
