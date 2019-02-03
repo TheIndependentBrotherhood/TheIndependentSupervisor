@@ -102,7 +102,11 @@ export class ApplicationsService {
   }
 
   startApplication(applicationId: string) {
-    return this.http.put(BACKEND_URL + applicationId + '/run', null);
+    return this.http.put(BACKEND_URL + applicationId + '/run', { autoRestart: false });
+  }
+
+  autoStartApplication(applicationId: string) {
+    return this.http.put(BACKEND_URL + applicationId + '/run', { autoRestart: true });
   }
 
   updateSoftwareApplication(applicationId: string) {

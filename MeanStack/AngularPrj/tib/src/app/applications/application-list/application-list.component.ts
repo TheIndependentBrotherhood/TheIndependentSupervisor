@@ -89,6 +89,17 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
       });
   }
 
+  onAutoStart(applicationId: string) {
+    this.isLoading = true;
+    this.applicationsService
+      .autoStartApplication(applicationId)
+      .subscribe(() => {
+        this.applicationsService.getApplications(this.applicationsPerPage, this.currentPage);
+      }, () => {
+        this.isLoading = false;
+      });
+  }
+
   onUpdateSoftware(applicationId: string) {
     this.isLoading = true;
     this.applicationsService
