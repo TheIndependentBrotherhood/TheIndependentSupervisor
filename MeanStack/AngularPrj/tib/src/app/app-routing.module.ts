@@ -17,7 +17,7 @@ import { AuthAdminGuard } from './auth/auth-admin.guard';
 const routes: Routes = [
   { path: '', component: DataTableComponent }
 
-  , { path: 'server', component: DataServerComponent }
+  , { path: 'server', component: DataServerComponent, canActivate: [AuthAdminGuard] }
 
   , { path: 'apps', component: ApplicationListComponent }
   , { path: 'apps/create', component: ApplicationCreateComponent, canActivate: [AuthAdminGuard] }

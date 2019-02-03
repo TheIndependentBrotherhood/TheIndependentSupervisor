@@ -107,7 +107,6 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.applicationsService.getApplications(this.applicationsPerPage, this.currentPage);
       }, () => {
-        console.log("Bonjour!");
         this.isLoading = false;
       });
   }
