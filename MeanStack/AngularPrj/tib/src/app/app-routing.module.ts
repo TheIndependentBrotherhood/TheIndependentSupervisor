@@ -3,6 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { DataTableComponent } from './data-table/data-table.component';
 
+import { DataServerComponent } from './data-server/data-server.component';
+
 import { PostListComponent } from './posts/post-list/post-list.component';
 import { PostCreateComponent } from './posts/post-create/post-create.component';
 
@@ -15,7 +17,7 @@ import { AuthAdminGuard } from './auth/auth-admin.guard';
 const routes: Routes = [
   { path: '', component: DataTableComponent }
 
-  , { path: 'server', component: DataTableComponent }
+  , { path: 'server', component: DataServerComponent }
 
   , { path: 'apps', component: ApplicationListComponent }
   , { path: 'apps/create', component: ApplicationCreateComponent, canActivate: [AuthAdminGuard] }
