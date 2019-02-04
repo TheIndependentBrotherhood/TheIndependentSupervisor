@@ -553,11 +553,11 @@ MIT
 
 @angular/material/paginator
 
+@angular/material/icon
+
 @angular/material/expansion
 
 @angular/material/list
-
-@angular/material/icon
 
 @angular/material/sidenav
 
