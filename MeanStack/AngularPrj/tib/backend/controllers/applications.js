@@ -12,8 +12,6 @@ const respawn = require('respawn');
 const psTree = require('ps-tree');
 const fs = require('fs');
 
-var path = require("path");
-
 const kill = function (pid, signal, callback) {
     signal   = signal || 'SIGKILL';
     callback = callback || function () {};
@@ -335,7 +333,7 @@ exports.startApplication = (req, res, next) => {
                     })
                     .catch(error => {
                       console.log('App ( ' + oldApp.title + ' ): ' + error);
-                  });                
+                  });
                 });
 
                 res.status(200).json({ message: 'Start succesful!' });
