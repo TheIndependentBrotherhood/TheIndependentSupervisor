@@ -1,0 +1,48 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport="true"
+      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'over' : 'side'"
+      [opened]="!(isHandset$ | async)">
+    <mat-toolbar class="header" color="primary">Menu</mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item [routerLink]="['/']">Home</a>
+      <a mat-list-item [routerLink]="['/apps']">Applications</a>
+      <a mat-list-item [routerLink]="['/posts']">Posts</a>
+      <hr *ngIf="userIsAuthenticated">
+      <a mat-list-item [routerLink]="['/posts/create']" *ngIf="userIsAuthenticated">New Post</a>
+      <a mat-list-item [routerLink]="['/apps/create']" *ngIf="userIsAuthenticated && isAdmin">New Application</a>
+      <a mat-list-item [routerLink]="['/server']" *ngIf="userIsAuthenticated && isAdmin">Data Server</a>
+      <a mat-list-item [routerLink]="['/users']" *ngIf="userIsAuthenticated && isAdmin">Users</a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar class="header" color="primary">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+        *ngIf="isHandset$ | async">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span class="header" *ngIf="isHandset$ | async">TIS</span>
+      <span class="header" *ngIf="!(isHandset$ | async)">The Independent Supervisor</span>
+      <span class="spacer"></span>
+      <ul>
+        <li *ngIf="!userIsAuthenticated">
+          <a mat-button routerLink="/auth/login" routerLinkActive="mat-accent">Login</a>
+        </li>
+        <li *ngIf="!userIsAuthenticated">
+          <a mat-button routerLink="/auth/signup" routerLinkActive="mat-accent">Sign Up</a>
+        </li>
+        <li *ngIf="userIsAuthenticated">
+          Hello, {{ username }}
+        </li>
+        <li *ngIf="userIsAuthenticated">
+          <button mat-button (click)="onLogout()">Logout</button>
+        </li>
+      </ul>
+    </mat-toolbar>
+    <ng-content></ng-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>

@@ -1,0 +1,13 @@
+@import '~@angular/material/theming';
+
+@include mat-core();
+
+// cf : /Angular/node_modules/@angular/material/_theming.scss
+$tib-theme-primary: mat-palette($mat-orange, 700, 800, 900);
+$tib-theme-accent: mat-palette($mat-amber, 600, 700, 800);
+
+$tib-theme-warn: mat-palette($mat-red);
+
+$tib-theme: mat-dark-theme($tib-theme-primary, $tib-theme-accent, $tib-theme-warn);
+
+@include angular-material-theme($tib-theme);
