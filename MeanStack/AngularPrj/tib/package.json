@@ -38,8 +38,6 @@
     "ng2-charts": "^1.6.0",
     "node-os-utils": "^1.0.7",
     "npm": "^6.7.0",
-    "os-usage": "git+https://github.com/ningt/os-usage.git",
-    "os-utils": "0.0.14",
     "ps-tree": "^1.2.0",
     "respawn": "^2.6.0",
     "rxjs": "~6.3.3",

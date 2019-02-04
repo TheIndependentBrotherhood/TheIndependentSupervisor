@@ -1,17 +1,13 @@
 const os = require('os');
-const osUtils = require('os-utils');
-const osu = require('node-os-utils')
-const usage = require('os-usage');
+const osu = require('node-os-utils');
 const diskspace = require('diskspace');
 
 const DataServer = require('../models/dataServer');
 
-let tabTime = {"n1h": null, "n50m": null, "n40m": null, "n30m": null, "n20m": null, "n10m": null, "now": null};
-
-async function readNSaveData() {
+function readNSaveData() {
   var curCPUrate, curMemrate, curDiskrate;
 
-  for (let key in tabTime) {
+  /* for (let key in tabTime) {
     if (tabTime.hasOwnProperty(key)) {
       await DataServer.findOne({ time: key })
         .then(dataServer => {
@@ -26,7 +22,7 @@ async function readNSaveData() {
           console.log(error);
         });
     }
-  }
+  } */
 
   diskspace.check('/', function (err, result)
   {
@@ -38,64 +34,66 @@ async function readNSaveData() {
         curCPUrate = cpuPercentage;
         curMemrate = (1 - (os.freemem() / os.totalmem())) * 100;
 
-        for (let key in tabTime) {
-          if (tabTime.hasOwnProperty(key) && key !== 'now') {
-            // Décalage des infos
-          } else {
-            const newDataServer = new DataServer({
-              time: key
-              , rateCPU: curCPUrate
+        const newDataServer = new DataServer({
+          rateCPU: curCPUrate
+          , rateRAM: curMemrate
+          , rateDiskStorage: curDiskrate
+        });
+
+        console.log('output: ');
+        console.log(newDataServer);
+
+        newDataServer.save().then(() => {
+          console.log('DataServer saved !');
+        });
+      })
+  });
+}
+
+// setInterval(readNSaveData, 10000);
+setInterval(readNSaveData, 600000);
+
+exports.getData = (req, res, next) => {
+  const dataQuery = DataServer.find();
+  let fectchedData;
+  dataQuery.limit(6);
+  dataQuery
+    .then(documents => {
+      fectchedData = documents;
+      console.log(fectchedData);
+      return DataServer.countDocuments();
+    })
+    .then(() => {
+      diskspace.check('/', function (err, result)
+      {
+        curDiskrate = (100 * result.used)/result.total;
+
+        const cpu = osu.cpu
+        cpu.usage()
+          .then(cpuPercentage => {
+            curCPUrate = cpuPercentage;
+            curMemrate = (1 - (os.freemem() / os.totalmem())) * 100;
+
+            const curData = new DataServer({
+              rateCPU: curCPUrate
               , rateRAM: curMemrate
               , rateDiskStorage: curDiskrate
             });
 
             console.log('output: ');
-            console.log(newDataServer);
+            console.log(curData);
 
-            if (tabTime.now) {
-              newDataServer['_id'] = tabTime.now['_id'];
-              DataServer.updateOne({ _id: newDataServer['_id'] }, newDataServer)
-                .then(result => {
-                  if (result.n > 0) {
-                    console.log('Update succesful!');
-                  } else {
-                    console.log('Not authorized!');
-                  }
-                })
-                .catch(error => {
-                  console.log('Couldn\'t update application!');
-                });
-            } else {
-              newDataServer.save().then(() => {
-                console.log('DataServer saved !');
-              });
-            }
-          }
-        }
-      })
-  });
-}
-
-setInterval(readNSaveData, 10000);
-// setInterval(readNSaveData, 600000);
-
-exports.getData = (req, res, next) => {
-  const dataQuery = DataServer.find();
-  let fectchedData;
-  dataQuery
-    .then(documents => {
-      fectchedData = documents;
-      return DataServer.countDocuments();
-    })
-    .then(() => {
-      res.status(200).json({
-        message: 'Posts fetched succesfully!'
-        , dataServer: fectchedData
+            res.status(200).json({
+              message: 'Data fetched succesfully!'
+              , dataServer: fectchedData
+              , curData: curData
+            });
+          })
       });
     })
     .catch(error => {
       res.status(500).json({
-        message: 'Fetching posts failed!'
+        message: 'Fetching data failed!'
       });
     });
 }

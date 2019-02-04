@@ -12,11 +12,6 @@ export class DataServerService {
   constructor(private http: HttpClient, private router: Router) {}
 
   getData() {
-    return this.http.get<{
-      _id: string
-      , rateCPU: number[]
-      , rateRAM: number[]
-      , rateDiskStockage: number[] }
-    >(BACKEND_URL);
+    return this.http.get(BACKEND_URL);
   }
 }

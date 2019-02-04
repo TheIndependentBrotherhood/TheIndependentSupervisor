@@ -1,7 +1,8 @@
-<div class="row">
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<div class="row" *ngIf="!isLoading">
   <div class="col-md-6">
     <div style="display: block;">
-    <canvas baseChart width="400" height="400"
+    <canvas baseChart width="400px" height="400px"
                 [datasets]="lineChartData"
                 [labels]="lineChartLabels"
                 [options]="lineChartOptions"
@@ -12,16 +13,5 @@
                 (chartClick)="chartClicked($event)"></canvas>
     </div>
   </div>
-  <div class="col-md-6" style="margin-bottom: 10px">
-    <table class="table table-responsive table-condensed">
-      <tr>
-        <th *ngFor="let label of lineChartLabels">{{label}}</th>
-      </tr>
-      <tr *ngFor="let d of lineChartData">
-        <td *ngFor="let label of lineChartLabels; let j=index">{{d && d.data[j]}}</td>
-      </tr>
-    </table>
-    <button (click)="randomize()">CLICK</button>
-    <button (click)="onRefresh()">REFRESH</button>
-  </div>
+    <button mat-button color="accent" (click)="onRefresh()" matTooltip="Refresh the data">REFRESH</button>
 </div>

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const dataServerSchema = mongoose.Schema({
-  time: { type: String }
+  date: { type: Date, default: Date.now }
   , rateCPU: { type: Number }
   , rateRAM: { type: Number }
   , rateDiskStorage: { type: Number }
