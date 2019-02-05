@@ -55,8 +55,8 @@ function readNSaveData() {
   });
 }
 
-// setInterval(readNSaveData, 10000);
-setInterval(readNSaveData, 600000);
+setInterval(readNSaveData, 1000);
+// setInterval(readNSaveData, 600000);
 
 exports.getData = (req, res, next) => {
   const dataQuery = DataServer.find();

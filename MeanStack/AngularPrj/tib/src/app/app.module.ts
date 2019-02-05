@@ -13,6 +13,7 @@ import { MainNavComponent } from './main-nav/main-nav.component';
 import { DataTableComponent } from './data-table/data-table.component';
 import { DataServerComponent } from './data-server/data-server.component';
 import { ErrorComponent } from './error/error.component';
+import { HomeComponent } from './home/home.component';
 
 import { AuthInterceptor } from './auth/auth-interceptor';
 import { ErrorInterceptor } from './error-interceptor';
@@ -28,6 +29,7 @@ import { ApplicationsModule } from './applications/applications.module';
     , DataTableComponent
     , DataServerComponent
     , ErrorComponent
+    , HomeComponent
   ],
   imports: [
     BrowserModule
