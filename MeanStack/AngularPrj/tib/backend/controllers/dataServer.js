@@ -4,8 +4,11 @@ const diskspace = require('diskspace');
 
 const DataServer = require('../models/dataServer');
 
+const ApplicationController = require('../controllers/applications');
+
 function readNSaveData() {
   var curCPUrate, curMemrate, curDiskrate;
+  const limit = 80.0;
 
   /* for (let key in tabTime) {
     if (tabTime.hasOwnProperty(key)) {
@@ -40,11 +43,13 @@ function readNSaveData() {
           , rateDiskStorage: curDiskrate
         });
 
-        console.log('output: ');
-        console.log(newDataServer);
-
         newDataServer.save().then(() => {
-          console.log('DataServer saved !');
+          const appId = ApplicationController.findLastRunningApplication();
+          if ( curCPUrate > limit || curMemrate > limit || curDiskrate > limit ) {
+            if ( appId ) {
+              ApplicationController.stopApplication(appId);
+            }
+          }
         });
       })
   });
@@ -60,7 +65,6 @@ exports.getData = (req, res, next) => {
   dataQuery
     .then(documents => {
       fectchedData = documents;
-      console.log(fectchedData);
       return DataServer.countDocuments();
     })
     .then(() => {
@@ -80,9 +84,6 @@ exports.getData = (req, res, next) => {
               , rateDiskStorage: curDiskrate
             });
 
-            console.log('output: ');
-            console.log(curData);
-
             res.status(200).json({
               message: 'Data fetched succesfully!'
               , dataServer: fectchedData
@@ -92,6 +93,7 @@ exports.getData = (req, res, next) => {
       });
     })
     .catch(error => {
+      console.log(error);
       res.status(500).json({
         message: 'Fetching data failed!'
       });

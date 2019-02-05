@@ -15,11 +15,14 @@ mat-paginator {
   margin-top: 1rem;
 }
 
-.post-image {
+.app-image {
   width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
 }
 
-.post-image img {
+.app-image img {
   width: 100%;
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
 }

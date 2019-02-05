@@ -70,6 +70,7 @@ exports.getUser = (req, res, next) => {
       }
     })
     .catch(error => {
+      console.log(error);
       res.status(500).json({
         message: 'Fetching user failed!'
       });
@@ -99,6 +100,7 @@ exports.getUsers = (req, res, next) => {
       });
     })
     .catch(error => {
+      console.log(error);
       res.status(500).json({
         message: 'Fetching users failed!'
       });

@@ -6,7 +6,7 @@
       <mat-icon color="warn" *ngIf="!application.isRunning" aria-label="STOP">power_settings_new</mat-icon>
       {{ application.title }}
     </mat-expansion-panel-header>
-    <div class="application-image" *ngIf="application.imagePath">
+    <div class="app-image" *ngIf="application.imagePath">
       <img [src]="application.imagePath" [alt]="application.title">
     </div>
     <p>{{ application.content }}</p>
@@ -19,6 +19,9 @@
       </button>
       <button mat-button color="accent" *ngIf="!application.isRunning" (click)="onUpdateSoftware(application.id)" matTooltip="Update the application" >
         <mat-icon aria-label="UPDATE">update</mat-icon>
+      </button>
+      <button mat-button color="accent" *ngIf="application.isRunning" (click)="onRestart(application.id);" matTooltip="Restart the application" >
+        <mat-icon aria-label="RESTART">autorenew</mat-icon>
       </button>
       <button mat-button color="warn" *ngIf="application.isRunning" (click)="onStop(application.id)" matTooltip="Stop the application" >
         <mat-icon aria-label="STOP">stop</mat-icon>

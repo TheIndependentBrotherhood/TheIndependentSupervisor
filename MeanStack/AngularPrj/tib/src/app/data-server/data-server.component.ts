@@ -129,10 +129,6 @@ export class DataServerComponent implements OnInit, OnDestroy {
           _lineChartData[i].data[this.lineChartLabels.length - 1] = result['curData'][keyArr[i]];
         }
 
-        console.log(result['curData']);
-        console.log(result['dataServer']);
-        console.log(_lineChartData);
-
         this.lineChartData = _lineChartData;
 
         this.isLoading = false;

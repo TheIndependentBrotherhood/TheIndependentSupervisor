@@ -18,6 +18,7 @@ exports.createPost = (req, res, next) => {
     });
   })
   .catch(error => {
+    console.log(error);
     res.status(500).json({
       message: 'Creating a post failed!'
     });
@@ -48,6 +49,7 @@ exports.updatePost = (req, res, next) => {
       }
     })
     .catch(error => {
+      console.log(error);
       res.status(500).json({
         message: 'Couldn\'t update post!'
       })
@@ -77,6 +79,7 @@ exports.getPosts = (req, res, next) => {
       });
     })
     .catch(error => {
+      console.log(error);
       res.status(500).json({
         message: 'Fetching posts failed!'
       });
@@ -93,6 +96,7 @@ exports.getPost = (req, res, next) => {
       }
     })
     .catch(error => {
+      console.log(error);
       res.status(500).json({
         message: 'Fetching post failed!'
       });
@@ -112,6 +116,7 @@ exports.deletePost = (req, res, next) => {
       }
     })
     .catch(error => {
+      console.log(error);
       res.status(500).json({
         message: 'Fetching posts failed!'
       });

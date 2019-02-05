@@ -129,7 +129,7 @@ exports.updateApplication = (req, res, next) => {
       }
     })
     .catch(error => {
-      console.log('hey: ' + error);
+      console.log(error);
       res.status(500).json({
         message: 'Fetching application failed!'
       });
@@ -159,6 +159,7 @@ exports.getApplications = (req, res, next) => {
       });
     })
     .catch(error => {
+      console.log(error);
       res.status(500).json({
         message: 'Fetching applications failed!'
       });
@@ -175,6 +176,7 @@ exports.getApplication = (req, res, next) => {
       }
     })
     .catch(error => {
+      console.log(error);
       res.status(500).json({
         message: 'Fetching application failed!'
       });
@@ -236,6 +238,7 @@ exports.deleteApplication = (req, res, next) => {
       }
     })
     .catch(error => {
+      console.log(error);
       res.status(500).json({
         message: 'Fetching application failed!'
       });
@@ -343,7 +346,7 @@ exports.startApplication = (req, res, next) => {
             }
           })
           .catch(error => {
-            console.log('Ah: ' + error);
+            console.log(error);
             res.status(500).json({
               message: 'Couldn\'t update application!'
             })
@@ -357,7 +360,7 @@ exports.startApplication = (req, res, next) => {
       }
     })
     .catch(error => {
-      console.log('hey: ' + error);
+      console.log(error);
       res.status(500).json({
         message: 'Fetching application failed!'
       });
@@ -392,22 +395,27 @@ exports.updateSoftwareApplication = (req, res, next) => {
       }
     })
     .catch(error => {
+      console.log(error);
       res.status(500).json({
         message: 'Fetching application failed!'
       });
   });
 }
 
-exports.stopApplication = (req, res, next) => {
+exports.stopApplicationAPI = (req, res, next) => {
   Application.findById(req.params.id)
     .then(oldApp => {
       if (oldApp && oldApp.isRunning) {
         // Stop script
-        if (runningApps[oldApp.id].autoRestart) {
-          const monitor = runningApps[oldApp.id].monitor;
-          monitor.stop();
-        } else {
-          kill(runningApps[oldApp.id]);
+        if ( runningApps[oldApp.id] ) {
+          if (runningApps[oldApp.id].autoRestart) {
+            const monitor = runningApps[oldApp.id].monitor;
+            monitor.stop();
+          } else {
+            console.log('kill :');
+            console.log(runningApps[oldApp.id]);
+            kill(runningApps[oldApp.id].pid);
+          }
         }
 
         const closedApp = new Application({
@@ -418,13 +426,16 @@ exports.stopApplication = (req, res, next) => {
         Application.updateOne({ _id: req.params.id, creator: req.userData.userId }, closedApp)
           .then(result => {
             if (result.n > 0) {
-              delete runningApps[closedApp.id];
+              if ( runningApps[closedApp.id] ) {
+                delete runningApps[closedApp.id];
+              }
               res.status(200).json({ message: 'Stop succesful!' });
             } else {
               res.status(401).json({ message: 'Not authorized!' });
             }
           })
           .catch(error => {
+            console.log(error);
             res.status(500).json({
               message: 'Couldn\'t update application!'
             })
@@ -438,8 +449,65 @@ exports.stopApplication = (req, res, next) => {
       }
     })
     .catch(error => {
+      console.log(error);
       res.status(500).json({
         message: 'Fetching application failed!'
       });
   });
+}
+
+exports.stopApplication = (id) => {
+  Application.findById(id)
+    .then(oldApp => {
+      if (oldApp && oldApp.isRunning) {
+        // Stop script
+        if (runningApps[oldApp.id].autoRestart) {
+          const monitor = runningApps[oldApp.id].monitor;
+          monitor.stop();
+        } else {
+          kill(runningApps[oldApp.id].pid);
+        }
+
+        const closedApp = new Application({
+          ...oldApp
+          , _id: id
+          , isRunning: false
+        });
+        Application.updateOne({ _id: id}, closedApp)
+          .then(result => {
+            if (result.n > 0) {
+              delete runningApps[closedApp.id];
+              console.log('Stop succesful!');
+            } else {
+              console.log('Not authorized!');
+            }
+          })
+          .catch(error => {
+            console.log(error);
+            console.log('Couldn\'t update application!');
+        });
+      } else if (!oldApp) {
+        console.log('Application not found!');
+      } else {
+        console.log('Already stopped!');
+      }
+    })
+    .catch(error => {
+      console.log(error);
+      console.log('Fetching application failed!');
+  });
+}
+
+exports.findLastRunningApplication = () => {
+  let appId;
+  if ( runningApps ) {
+    for (var key in runningApps) {
+      if (runningApps.hasOwnProperty(key)) {
+        appId = key;
+      }
+    }
+    return appId;
+  } else {
+    return null;
+  }
 }

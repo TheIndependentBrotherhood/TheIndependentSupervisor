@@ -122,6 +122,21 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
       });
   }
 
+  onRestart(applicationId: string) {
+    this.isLoading = true;
+    this.applicationsService
+      .stopApplication(applicationId)
+      .subscribe(() => {
+        this.applicationsService
+          .startApplication(applicationId)
+          .subscribe(() => {
+            this.applicationsService.getApplications(this.applicationsPerPage, this.currentPage);
+          }, () => {
+            this.isLoading = false;
+          });
+      });
+  }
+
   ngOnDestroy() {
     this.applicationsSub.unsubscribe();
     this.authStatusSub.unsubscribe();
