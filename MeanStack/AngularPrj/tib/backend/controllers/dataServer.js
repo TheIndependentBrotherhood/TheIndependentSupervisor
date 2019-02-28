@@ -6,9 +6,11 @@ const DataServer = require('../models/dataServer');
 
 const ApplicationController = require('../controllers/applications');
 
+const interval = 60000;
+const limit = 80.0;
+
 function readNSaveData() {
   var curCPUrate, curMemrate, curDiskrate;
-  const limit = 80.0;
 
   /* for (let key in tabTime) {
     if (tabTime.hasOwnProperty(key)) {
@@ -55,7 +57,7 @@ function readNSaveData() {
   });
 }
 
-setInterval(readNSaveData, 1000);
+setInterval(readNSaveData, interval);
 // setInterval(readNSaveData, 600000);
 
 exports.getData = (req, res, next) => {
